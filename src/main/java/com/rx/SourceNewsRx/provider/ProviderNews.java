@@ -77,6 +77,60 @@ public class ProviderNews {
     }
 
 
+    public CompletableFuture<News> sourceANewsAsyncOne(){
+       return CompletableFuture.supplyAsync(this::sourceANewsOne);
+    }
+
+    public CompletableFuture<News> sourceBNewsAsyncOne(){
+        return CompletableFuture.supplyAsync(this::sourceANewsOne);
+    }
+
+    public CompletableFuture<News> sourceCNewsAsyncOne(){
+        return CompletableFuture.supplyAsync(this::sourceANewsOne);
+    }
+
+    private News sourceANewsOne()  {
+        News news = null;
+        try {
+            LocalDate now =LocalDate.now();
+            news=new News("vaina"+now, LocalDate.now(),"RX");
+                Thread.sleep(300);
+        }catch (InterruptedException e){
+            System.out.println(e.getMessage());
+        }
+        return news;
+
+    }
+
+    private News sourceBNewsOne()  {
+        News news = null;
+        try {
+            LocalDate now =LocalDate.now();
+            news=new News("vaina"+now, LocalDate.now(),"RX");
+            Thread.sleep(500);
+        }catch (InterruptedException e){
+            System.out.println(e.getMessage());
+        }
+        return news;
+
+    }
+
+
+    private News sourceCNewsOne()  {
+        News news = null;
+        try {
+            LocalDate now =LocalDate.now();
+            news=new News("vaina"+now, LocalDate.now(),"RX");
+            Thread.sleep(250);
+        }catch (InterruptedException e){
+            System.out.println(e.getMessage());
+        }
+        return news;
+
+    }
+
+
+
 
 
 }
