@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.atomic.AtomicInteger;
 
 
 @Service
@@ -30,14 +31,18 @@ public class NewsService {
     }
 
     public List<News> getNewsAsync(int limit) {
-
-        List<CompletableFuture<List<News>>> futureList = List.of(providerNews.sourceANewsAsync(),
-                providerNews.sourceBNewsAsync(),providerNews.sourceBNewsAsync());
+        List<CompletableFuture<News>> futureList = new ArrayList<>();
+        for( int i =0; i<limit;i=i+3){
+            futureList.add(providerNews.sourceANewsAsyncOne());
+            futureList.add(providerNews.sourceBNewsAsyncOne());
+            futureList.add(providerNews.sourceCNewsAsyncOne());
+        }
 
        CompletableFuture<List<News>> resul= CompletableFuture.allOf(futureList.toArray(new CompletableFuture[0]))
-                .thenApply(v -> futureList.stream().map(CompletableFuture::join).flatMap(List::stream).toList());
-
-         return resul.join();
+                        .thenApply(v -> futureList.stream().map(CompletableFuture::join)
+                                .limit(limit)
+                        .toList());
+        return resul.join();
 
     }
 }
