@@ -29,4 +29,9 @@ public class NewsController {
     public List<News> getNewsSync(@RequestParam(defaultValue = "10") int limit){
         return newsService.getNewsAsync(limit);
     }
+
+    @GetMapping("Async+")
+    public List<News> getFirstNewsAsync(@RequestParam(defaultValue = "10") int limit){
+        return newsService.getFirstNewsAsync(limit);
+    }
 }
