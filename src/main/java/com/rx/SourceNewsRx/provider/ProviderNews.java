@@ -7,6 +7,8 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
+import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 @Component
 public class ProviderNews {
@@ -82,11 +84,11 @@ public class ProviderNews {
     }
 
     public CompletableFuture<News> sourceBNewsAsyncOne(){
-        return CompletableFuture.supplyAsync(this::sourceANewsOne);
+        return CompletableFuture.supplyAsync(this::sourceBNewsOne);
     }
 
     public CompletableFuture<News> sourceCNewsAsyncOne(){
-        return CompletableFuture.supplyAsync(this::sourceANewsOne);
+        return CompletableFuture.supplyAsync(this::sourceCNewsOne);
     }
 
     private News sourceANewsOne()  {
@@ -128,6 +130,38 @@ public class ProviderNews {
         return news;
 
     }
+
+
+    public void sourceAPublicher(Consumer<News> consumer, Supplier<Boolean>supplier)  {
+        new Thread(() -> {
+             while (!supplier.get()) {
+                 consumer.accept(sourceANewsOne());
+            }
+        }).start();
+
+    }
+
+
+
+    public void sourceBPublicher(Consumer<News> consumer, Supplier<Boolean>supplier)  {
+        new Thread(() -> {
+            while (!supplier.get()) {
+                consumer.accept(sourceBNewsOne());
+            }
+        }).start();
+
+    }
+
+
+    public void sourceCPublicher(Consumer<News> consumer, Supplier<Boolean>supplier)  {
+        new Thread(() -> {
+            while (!supplier.get()) {
+                consumer.accept(sourceCNewsOne());
+            }
+        }).start();
+
+    }
+
 
 
 
